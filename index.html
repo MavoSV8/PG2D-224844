@@ -1,17 +1,28 @@
 <html>
 <head>
-  <title>Tytuł</title>
+    <title>Tytuł</title>
 </head>
 <body>
 <canvas id="myCanvas" width="800" height="600">
 </canvas>
 <script>
-var c = document.getElementById("myCanvas");
-var ctx = c.getContext("2d");
-ctx.beginPath();
-ctx.arc(300, 300, 160, 0, 2 * Math.PI);
-ctx.fillStyle = 'blue'
-ctx.fill();
+    var c = document.getElementById("myCanvas");
+    var ctx = c.getContext("2d");
+    ctx.beginPath();
+    ctx.arc(300, 300, 160, 0, 2 * Math.PI);
+    ctx.closePath();
+    ctx.fillStyle = '#00b300';
+    ctx.fill();
+    function changeColor() {
+        if (ctx.fillStyle === '#00b300') {
+            ctx.fillStyle = '#0000ff';
+            ctx.fill();
+        } else {
+            ctx.fillStyle = '#00b300';
+            ctx.fill();
+        }
+    }
+    setInterval(changeColor,1000);
 </script>
 </body>
 </html>
