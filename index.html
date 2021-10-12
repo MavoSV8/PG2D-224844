@@ -15,6 +15,7 @@
     ctx.closePath();
     ctx.fillStyle = '#00ff00';
     ctx.fill();
+
     function changeColor() {
         if (ctx.fillStyle === '#00ff00') {
             ctx.fillStyle = '#0000ff';
@@ -24,7 +25,8 @@
             ctx.fill();
         }
     }
-    setInterval(changeColor,1000);
+
+    setInterval(changeColor, 1000);
 
 
     var green = 255;
@@ -34,22 +36,27 @@
     ctx2.beginPath();
     ctx2.arc(300, 300, 160, 0, 2 * Math.PI);
     ctx2.closePath();
-    ctx2.fillStyle = 'rgba(0,'+ green + ',' + blue + ',255)';
+    ctx2.fillStyle = 'rgba(0,' + green + ',' + blue + ',255)';
     ctx2.fill();
+    var counter = 0;
     function changeColorGradient() {
-        if (blue < 255 && green > 0) {
-
-        blue++;
-        green--;
+        if (counter < 255) {
+            blue++;
+            green--;
         }
-        else {
-           blue--;
-           green++;
+         else {
+            blue--;
+            green++;
         }
         ctx2.fillStyle = 'rgba(0,' + green + ',' + blue + ',255)';
         ctx2.fill();
+        counter++;
+        if(counter === 511){
+            counter = 0;
+        }
     }
-    setInterval(changeColorGradient,4);
+    setInterval(changeColorGradient, 1000/255);
+
 </script>
 </body>
 </html>
