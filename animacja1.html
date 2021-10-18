@@ -10,12 +10,15 @@
     var x = 400;
     var c = document.getElementById("myCanvas");
     var ctx = c.getContext("2d");
+    var yBall = 540;
+    var ball = c.getContext("2d");
     ctx.beginPath();
     ctx.rect(x,550,100,25);
     ctx.fillStyle = '#00ff00';
     ctx.fill();
     ctx.closePath();
     window.addEventListener('keydown', movePlatform);
+    window.addEventListener('keydown', fireBall)
     function movePlatform(e) {
         if(e.key === "ArrowLeft"){
         x= x - 10;
@@ -39,8 +42,28 @@
         
         }
     }
-    function fireBall() {
-
+    function fireBall(e) {
+        if (e.code === 'Space'){ 
+        var xBall = x;
+        ball.beginPath();
+        ball.arc(x, yBall, 10, 0, 2 * Math.PI);
+        ball.closePath();
+        ball.fillStyle = 'red';
+        ball.fill();
+    
+        while(yBall >= 0)
+        {
+            yBall = yBall - 10;
+            ball.clearRect(0,0,c.width,c.height);
+            ball.beginPath();
+            ball.arc(xBall, yBall, 10, 0, 2 * Math.PI);
+            ball.closePath();
+            ball.fillStyle = 'red';
+            ball.fill();
+            
+        }
+        yBall = 540
+        }
     }
 
     function generateTarget() {
