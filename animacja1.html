@@ -6,16 +6,24 @@
 <canvas id="myCanvas" width="800" height="600">
 </canvas>
 <script>
+    
+    var x = 400;
     var c = document.getElementById("myCanvas");
     var ctx = c.getContext("2d");
     ctx.beginPath();
-    ctx.rect(400,550,100,25);
+    ctx.rect(x,550,100,25);
     ctx.fillStyle = '#00ff00';
     ctx.fill();
     ctx.closePath();
-    
+    window.addEventListener('keydown',movePlatform)
     function movePlatform() {
-
+        ctx.clearRect(0,0,c.width,c.height);
+        ctx.beginPath();
+        ctx.rect(x,550,100,25);
+        ctx.fillStyle = '#00ff00';
+        ctx.fill();
+        ctx.closePath();
+        x= x-10;
     }
     function fireBall() {
 
