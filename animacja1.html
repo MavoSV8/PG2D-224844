@@ -9,20 +9,22 @@
     
     var x = 400;
     var c = document.getElementById("myCanvas");
+    var c2 = document.getElementById("myCanvas");
     var ctx = c.getContext("2d");
     var yBall = 540;
-    var ball = c.getContext("2d");
+    var xBall = 0;
     ctx.beginPath();
     ctx.rect(x,550,100,25);
     ctx.fillStyle = '#00ff00';
     ctx.fill();
     ctx.closePath();
     window.addEventListener('keydown', movePlatform);
-    window.addEventListener('keydown', fireBall)
+    window.addEventListener('keydown', fireBall);
     function movePlatform(e) {
         if(e.key === "ArrowLeft"){
+        ctx.clearRect(x,550,100,25);    
         x= x - 10;
-        ctx.clearRect(0,0,c.width,c.height);
+        
         ctx.beginPath();
         ctx.rect(x,550,100,25);
         ctx.fillStyle = '#00ff00';
@@ -32,8 +34,8 @@
         }
         if(e.key === "ArrowRight")
         {
+        ctx.clearRect(x,550,100,25);
         x = x + 10;
-        ctx.clearRect(0,0,c.width,c.height);
         ctx.beginPath();
         ctx.rect(x,550,100,25);
         ctx.fillStyle = '#00ff00';
@@ -42,27 +44,28 @@
         
         }
     }
+
+    function moveUp(){
+            
+        if(yBall >= 0){
+            ctx.clearRect((xBall + 50) - 10,yBall - 10,20,20);
+            yBall = yBall - 10;
+            ctx.beginPath();
+            ctx.arc(xBall + 50, yBall, 10, 0, 2 * Math.PI);
+            ctx.closePath();
+            ctx.fillStyle = 'red';
+            ctx.fill();
+        }
+    }
+
     function fireBall(e) {
         if (e.code === 'Space'){ 
-        var xBall = x;
-        ball.beginPath();
-        ball.arc(x, yBall, 10, 0, 2 * Math.PI);
-        ball.closePath();
-        ball.fillStyle = 'red';
-        ball.fill();
-    
-        while(yBall >= 0)
-        {
-            yBall = yBall - 10;
-            ball.clearRect(0,0,c.width,c.height);
-            ball.beginPath();
-            ball.arc(xBall, yBall, 10, 0, 2 * Math.PI);
-            ball.closePath();
-            ball.fillStyle = 'red';
-            ball.fill();
-            
-        }
-        yBall = 540
+            xBall = x;
+            var interval = setInterval(moveUp,100);
+            if (yBall === 0){
+                clearInterval(interval);
+                yBall = 540;
+            }
         }
     }
 
