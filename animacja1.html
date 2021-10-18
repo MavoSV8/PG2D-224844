@@ -13,6 +13,7 @@
     var ctx = c.getContext("2d");
     var yBall = 540;
     var xBall = 0;
+    var interval;
     ctx.beginPath();
     ctx.rect(x,550,100,25);
     ctx.fillStyle = '#00ff00';
@@ -24,7 +25,6 @@
         if(e.key === "ArrowLeft"){
         ctx.clearRect(x,550,100,25);    
         x= x - 10;
-        
         ctx.beginPath();
         ctx.rect(x,550,100,25);
         ctx.fillStyle = '#00ff00';
@@ -61,7 +61,7 @@
     function fireBall(e) {
         if (e.code === 'Space'){ 
             xBall = x;
-            var interval = setInterval(moveUp,100);
+            interval = setInterval(moveUp,100);
             if (yBall === 0){
                 clearInterval(interval);
                 yBall = 540;
