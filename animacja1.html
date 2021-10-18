@@ -15,15 +15,29 @@
     ctx.fillStyle = '#00ff00';
     ctx.fill();
     ctx.closePath();
-    window.addEventListener('keydown',movePlatform)
-    function movePlatform() {
+    window.addEventListener('keydown', movePlatform);
+    function movePlatform(e) {
+        if(e.key === "ArrowLeft"){
+        x= x - 10;
         ctx.clearRect(0,0,c.width,c.height);
         ctx.beginPath();
         ctx.rect(x,550,100,25);
         ctx.fillStyle = '#00ff00';
         ctx.fill();
         ctx.closePath();
-        x= x-10;
+        
+        }
+        if(e.key === "ArrowRight")
+        {
+        x = x + 10;
+        ctx.clearRect(0,0,c.width,c.height);
+        ctx.beginPath();
+        ctx.rect(x,550,100,25);
+        ctx.fillStyle = '#00ff00';
+        ctx.fill();
+        ctx.closePath();
+        
+        }
     }
     function fireBall() {
 
