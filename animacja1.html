@@ -15,31 +15,39 @@
         heightPlatform;
 
         constructor(x,y,w,h){
-            xPlatform = x;
-            yPlatform = y;
-            widthPlatform = w;
-            heightPlatform = h;
+            this.xPlatform = x;
+            this.yPlatform = y;
+            this.widthPlatform = w;
+            this.heightPlatform = h;
         }
 
-        drawPlatform(x,c){ 
-            xPlatform = x;
+        drawPlatformInit(){
             ctx.beginPath();
-            if(xPlatform < 0){
-                xPlatform = 0;
-            }
-            if (xPlatform + widthPlatform > c.width){
-                xPlatform = c.width - widthPlatform;
-            }
-            ctx.rect(xPlatform,550,100,25);
+            ctx.rect(this.xPlatform,this.yPlatform,this.widthPlatform,this.heightPlatform);
             ctx.fillStyle = '#00ff00';
             ctx.fill();
             ctx.closePath();
+        }
 
+        drawPlatform(x,c){ 
+            this.xPlatform = x;
+            ctx.beginPath();
+            if(this.xPlatform < 0){
+                this.xPlatform = 0;
+            }
+            if (this.xPlatform + this.widthPlatform > c.width){
+                this.xPlatform = c.width - this.widthPlatform;
+            }
+            ctx.rect(this.xPlatform,this.yPlatform,this.widthPlatform,this.heightPlatform);
+            ctx.fillStyle = '#00ff00';
+            ctx.fill();
+            ctx.closePath();
+            return this.xPlatform;
         }
 
         erasePlatform(){
         
-        ctx.clearRect(xPlatform,550,100,25);  
+        ctx.clearRect(this.xPlatform,this.yPlatform,this.widthPlatform,this.heightPlatform);  
 
         }
 
@@ -57,7 +65,7 @@
             rBall = r;
 
         }
-
+        
         drawBall(){
             ctx.beginPath();
             ctx.arc(xBall + 50, yBall, 10, 0, 2 * Math.PI);
@@ -113,20 +121,20 @@
     var ctx = c.getContext("2d");
     var interval;
     var platform = new Platform(x,y,100,25);
+    platform.drawPlatformInit();
     window.addEventListener('keydown', movePlatform);
     window.addEventListener('keydown', fireBall);
     function movePlatform(e) {
         if(e.key === "ArrowLeft"){
         platform.erasePlatform();    
         x = x - 10;
-        platform.drawPlatform(x,c);
-        
+        x = platform.drawPlatform(x,c);
         }
         if(e.key === "ArrowRight")
         {
         platform.erasePlatform();    
-        x = x - 10;
-        platform.drawPlatform(x,c);
+        x = x + 10;
+        x = platform.drawPlatform(x,c);
          
         }
     }
