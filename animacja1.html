@@ -68,7 +68,7 @@
         
         drawBallInit(){
             ctx.beginPath();
-            ctx.arc(this.xBall + 50, this.yBall - 10, this.rBall, 0, 2 * Math.PI);
+            ctx.arc(this.xBall + 37.5, this.yBall - 10, this.rBall, 0, 2 * Math.PI);
             ctx.closePath();
             ctx.fillStyle = 'red';
             ctx.fill();
@@ -77,10 +77,10 @@
 
 
 
-        drawBall(y,c){
+        drawBall(y){
             this.yBall = y.valueOf();
             ctx.beginPath();
-            ctx.arc(this.xBall + 50, this.yBall, this.rBall, 0, 2 * Math.PI);
+            ctx.arc(this.xBall + 37.5, this.yBall, this.rBall, 0, 2 * Math.PI);
             ctx.closePath();
             ctx.fillStyle = 'red';
             ctx.fill();
@@ -88,7 +88,7 @@
         }
 
         eraseBall(){
-            ctx.clearRect((this.xBall + 50) - 10,this.yBall - 10,20,20);
+            ctx.clearRect((this.xBall + 37.5) - 10,this.yBall - 10,20.5,20.5);
         }
     }
 
@@ -99,24 +99,31 @@
 
         constructor(x,y,r){
         
-            xTarget = x;
-            yTarget = y;
-            rTarget = r;
+            this.xTarget = x;
+            this.yTarget = y;
+            this.rTarget = r;
         
         }
-
-        drawTarget(){
-            
+        drawTargetInit(){
             ctx.beginPath();
-            ctx.arc(xTarget, yTarget, 10, 0, 2 * Math.PI);
+            ctx.arc(this.xTarget, this.yTarget, this.rTarget, 0, 2 * Math.PI);
             ctx.closePath();
-            ctx.fillStyle = 'red';
+            ctx.fillStyle = 'blue';
+            ctx.fill();
+        }
+        drawTarget(x,y){
+            this.xTarget = x.valueOf();
+            this.yTarget = x.valueOf();
+            ctx.beginPath();
+            ctx.arc(this.xTarget, this.yTarget, this.rTarget, 0, 2 * Math.PI);
+            ctx.closePath();
+            ctx.fillStyle = 'blue';
             ctx.fill();
 
         }
 
         eraseTarget(){
-            ctx.clearRect((yTarget + 50),yBall,20,20);
+            ctx.clearRect(this.yTarget,this.yBall,this.rTarget * 2,this.rTarget * 2);
 
         }
 
@@ -128,11 +135,13 @@
     var c = document.getElementById("myCanvas");
     var ctx = c.getContext("2d");
     var interval;
-    var platform = new Platform(x,y,100,25);
+    var platform = new Platform(x,y,75,25);
+    var targetsList = [];
+    var deadTargetsList = [];
     platform.drawPlatformInit();
     window.addEventListener('keydown', movePlatform);
     window.addEventListener('keydown', fireBall);
-    
+    generateTarget();
     
     function movePlatform(e) {
         if(e.key === "ArrowLeft"){
@@ -149,17 +158,12 @@
         }
     }
 
-    function moveUp(){
-         ball.eraseBall();
-         yB = yB - 10;
-         yB = ball.drawBall(yB,c); 
-      
-    }
+
 
     function fireBall(e) {
         if (e.code === 'Space'){ 
             var yB = y.valueOf();
-            var ball = new Ball(x,yB,10);
+            var ball = new Ball(x,yB - 10,10);
             ball.drawBallInit();
             interval = setInterval(function() {
                 ball.eraseBall();
@@ -175,6 +179,25 @@
     }
 
     function generateTarget() {
+
+        for (var i = 1; i <= 2 ; i++){
+            for (var j = 1; j < 20; j++)
+            var target = new Target(60 * j, 60 * i,20).drawTargetInit();
+            targetsList.push(target);  
+        }
+        
+    }
+
+    function respawnTarget(deadTargetID){
+        var counter;
+        var respawnTimer = setInterval(function(){
+            counter++
+        },1000)
+        if(counter === 3)
+        {
+            targetsList.splice
+        }
+
 
     }
 </script>
