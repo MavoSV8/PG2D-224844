@@ -30,7 +30,7 @@
         }
 
         drawPlatform(x,c){ 
-            this.xPlatform = x;
+            this.xPlatform = x.valueOf();
             ctx.beginPath();
             if(this.xPlatform < 0){
                 this.xPlatform = 0;
@@ -60,28 +60,35 @@
         rBall;
 
         constructor(x,y,r){
-            xBall = x;
-            yBall = y;
-            rBall = r;
+            this.xBall = x;
+            this.yBall = y;
+            this.rBall = r;
 
         }
         
-        drawBall(){
+        drawBallInit(){
             ctx.beginPath();
-            ctx.arc(xBall + 50, yBall, 10, 0, 2 * Math.PI);
+            ctx.arc(this.xBall + 50, this.yBall - 10, this.rBall, 0, 2 * Math.PI);
             ctx.closePath();
             ctx.fillStyle = 'red';
             ctx.fill();
+
         }
 
-        moveUp(){
-            ctx.clearRect((xBall + 50) - 10,yBall - 10,20,20);
-            yBall = yBall - 10;
+
+
+        drawBall(y,c){
+            this.yBall = y.valueOf();
             ctx.beginPath();
-            ctx.arc(xBall + 50, yBall, 10, 0, 2 * Math.PI);
+            ctx.arc(this.xBall + 50, this.yBall, this.rBall, 0, 2 * Math.PI);
             ctx.closePath();
             ctx.fillStyle = 'red';
             ctx.fill();
+            return this.yBall;
+        }
+
+        eraseBall(){
+            ctx.clearRect((this.xBall + 50) - 10,this.yBall - 10,20,20);
         }
     }
 
@@ -109,7 +116,7 @@
         }
 
         eraseTarget(){
-            ctx.clearRect((yTarget + 50) - 10,yBall - 10,20,20);
+            ctx.clearRect((yTarget + 50),yBall,20,20);
 
         }
 
@@ -117,6 +124,7 @@
     
     var x = 400;
     var y = 540;
+    //var yB = y.valueOf();
     var c = document.getElementById("myCanvas");
     var ctx = c.getContext("2d");
     var interval;
@@ -124,41 +132,44 @@
     platform.drawPlatformInit();
     window.addEventListener('keydown', movePlatform);
     window.addEventListener('keydown', fireBall);
+    
+    
     function movePlatform(e) {
         if(e.key === "ArrowLeft"){
         platform.erasePlatform();    
-        x = x - 10;
+        x = x - 20;
         x = platform.drawPlatform(x,c);
         }
         if(e.key === "ArrowRight")
         {
         platform.erasePlatform();    
-        x = x + 10;
+        x = x + 20;
         x = platform.drawPlatform(x,c);
          
         }
     }
 
     function moveUp(){
-            
-        if(yBall >= 0){
-            ctx.clearRect((xBall + 50) - 10,yBall - 10,20,20);
-            yBall = yBall - 10;
-            ctx.beginPath();
-            ctx.arc(xBall + 50, yBall, 10, 0, 2 * Math.PI);
-            ctx.closePath();
-            ctx.fillStyle = 'red';
-            ctx.fill();
-        }
+         ball.eraseBall();
+         yB = yB - 10;
+         yB = ball.drawBall(yB,c); 
+      
     }
 
     function fireBall(e) {
         if (e.code === 'Space'){ 
-            xBall = x;
-            interval = setInterval(moveUp,100);
-            if (yBall === 0){
+            var yB = y.valueOf();
+            var ball = new Ball(x,yB,10);
+            ball.drawBallInit();
+            interval = setInterval(function() {
+                ball.eraseBall();
+                yB = yB - 20;
+                yB = ball.drawBall(yB,c);   
+            },100);
+            if (yB <= 0){
                 clearInterval(interval);
-                yBall = 540;
+                ball = null;
+                yB = 520;
             }
         }
     }
