@@ -6,42 +6,128 @@
 <canvas id="myCanvas" width="800" height="600">
 </canvas>
 <script>
+
+    class Platform {
+
+        xPlatform;
+        yPlatform;
+        widthPlatform;
+        heightPlatform;
+
+        constructor(x,y,w,h){
+            xPlatform = x;
+            yPlatform = y;
+            widthPlatform = w;
+            heightPlatform = h;
+        }
+
+        drawPlatform(x,c){ 
+            xPlatform = x;
+            ctx.beginPath();
+            if(xPlatform < 0){
+                xPlatform = 0;
+            }
+            if (xPlatform + widthPlatform > c.width){
+                xPlatform = c.width - widthPlatform;
+            }
+            ctx.rect(xPlatform,550,100,25);
+            ctx.fillStyle = '#00ff00';
+            ctx.fill();
+            ctx.closePath();
+
+        }
+
+        erasePlatform(){
+        
+        ctx.clearRect(xPlatform,550,100,25);  
+
+        }
+
+    }
+
+    class Ball {
+
+        xBall;
+        yBall;
+        rBall;
+
+        constructor(x,y,r){
+            xBall = x;
+            yBall = y;
+            rBall = r;
+
+        }
+
+        drawBall(){
+            ctx.beginPath();
+            ctx.arc(xBall + 50, yBall, 10, 0, 2 * Math.PI);
+            ctx.closePath();
+            ctx.fillStyle = 'red';
+            ctx.fill();
+        }
+
+        moveUp(){
+            ctx.clearRect((xBall + 50) - 10,yBall - 10,20,20);
+            yBall = yBall - 10;
+            ctx.beginPath();
+            ctx.arc(xBall + 50, yBall, 10, 0, 2 * Math.PI);
+            ctx.closePath();
+            ctx.fillStyle = 'red';
+            ctx.fill();
+        }
+    }
+
+    class Target {
+        xTarget;
+        yTarget;
+        rTarget;
+
+        constructor(x,y,r){
+        
+            xTarget = x;
+            yTarget = y;
+            rTarget = r;
+        
+        }
+
+        drawTarget(){
+            
+            ctx.beginPath();
+            ctx.arc(xTarget, yTarget, 10, 0, 2 * Math.PI);
+            ctx.closePath();
+            ctx.fillStyle = 'red';
+            ctx.fill();
+
+        }
+
+        eraseTarget(){
+            ctx.clearRect((yTarget + 50) - 10,yBall - 10,20,20);
+
+        }
+
+    }
     
     var x = 400;
+    var y = 540;
     var c = document.getElementById("myCanvas");
-    var c2 = document.getElementById("myCanvas");
     var ctx = c.getContext("2d");
-    var yBall = 540;
-    var xBall = 0;
     var interval;
-    ctx.beginPath();
-    ctx.rect(x,550,100,25);
-    ctx.fillStyle = '#00ff00';
-    ctx.fill();
-    ctx.closePath();
+    var platform = new Platform(x,y,100,25);
     window.addEventListener('keydown', movePlatform);
     window.addEventListener('keydown', fireBall);
     function movePlatform(e) {
         if(e.key === "ArrowLeft"){
-        ctx.clearRect(x,550,100,25);    
-        x= x - 10;
-        ctx.beginPath();
-        ctx.rect(x,550,100,25);
-        ctx.fillStyle = '#00ff00';
-        ctx.fill();
-        ctx.closePath();
+        platform.erasePlatform();    
+        x = x - 10;
+        platform.drawPlatform(x,c);
         
         }
         if(e.key === "ArrowRight")
         {
-        ctx.clearRect(x,550,100,25);
-        x = x + 10;
-        ctx.beginPath();
-        ctx.rect(x,550,100,25);
-        ctx.fillStyle = '#00ff00';
-        ctx.fill();
-        ctx.closePath();
-        
+        platform.erasePlatform();    
+        x = x - 10;
+        platform.drawPlatform(x,c);
+         
         }
     }
 
