@@ -63,7 +63,7 @@
             this.xBall = x;
             this.yBall = y;
             this.rBall = r;
-
+            this.drawBallInit();
         }
         
         drawBallInit(){
@@ -75,8 +75,6 @@
 
         }
 
-
-
         drawBall(y){
             this.yBall = y.valueOf();
             ctx.beginPath();
@@ -84,11 +82,11 @@
             ctx.closePath();
             ctx.fillStyle = 'red';
             ctx.fill();
-            return this.yBall;
+            //return this.yBall;
         }
 
         eraseBall(){
-            ctx.clearRect((this.xBall + 37.5) - 10,this.yBall - 10,20.5,20.5);
+            ctx.clearRect((this.xBall + 37.5) - 10,this.yBall - 11,20.5,20.5);
         }
     }
 
@@ -102,8 +100,9 @@
             this.xTarget = x;
             this.yTarget = y;
             this.rTarget = r;
-        
+            this.drawTargetInit();
         }
+
         drawTargetInit(){
             ctx.beginPath();
             ctx.arc(this.xTarget, this.yTarget, this.rTarget, 0, 2 * Math.PI);
@@ -122,26 +121,33 @@
 
         }
 
-        eraseTarget(){
-            ctx.clearRect(this.yTarget,this.yBall,this.rTarget * 2,this.rTarget * 2);
+        turnInvisible(){
+            ctx.beginPath();
+            ctx.arc(this.xTarget, this.yTarget, this.rTarget + 1, 0, 2 * Math.PI);
+            ctx.closePath();
+            ctx.fillStyle = 'white';
+            ctx.fill();
 
         }
 
     }
     
-    var x = 400;
+    var x = 380;
     var y = 540;
     //var yB = y.valueOf();
     var c = document.getElementById("myCanvas");
     var ctx = c.getContext("2d");
     var interval;
+    var interval2;
     var platform = new Platform(x,y,75,25);
     var targetsList = [];
+    var ballsList = [];
     var deadTargetsList = [];
     platform.drawPlatformInit();
     window.addEventListener('keydown', movePlatform);
     window.addEventListener('keydown', fireBall);
     generateTarget();
+    
     
     function movePlatform(e) {
         if(e.key === "ArrowLeft"){
@@ -158,48 +164,55 @@
         }
     }
 
+    interval2 = setInterval(function(){
+                for(j = 0; j < ballsList.length; j++){
+                    ballsList[j].eraseBall();
+                    ballsList[j].drawBall(ballsList[j].yBall - 20);
 
+                }
+            },100);
+
+            interval = setInterval(function() {
+                for (z = 0; z < ballsList.length; z++){
+                for (i = 0; i < targetsList.length; i++){
+                    var a = targetsList[i].xTarget - ballsList[z].xBall;
+                    var b = targetsList[i].yTarget - ballsList[z].yBall;
+                    var c = Math.sqrt(a*a + b*b);
+                    if (c <= targetsList[i].rTarget + ballsList[z].rBall){
+
+                        targetsList[i].turnInvisible();
+                        targetsList.splice(i,1);
+                        ballsList[z].eraseBall;
+                        ballsList.splice(z,1);
+            
+                    }
+                }
+                }   
+            },100);
+
+    
+  
 
     function fireBall(e) {
-        if (e.code === 'Space'){ 
+        if (e.code === 'Space'){
+            
             var yB = y.valueOf();
-            var ball = new Ball(x,yB - 10,10);
-            ball.drawBallInit();
-            interval = setInterval(function() {
-                ball.eraseBall();
-                yB = yB - 20;
-                yB = ball.drawBall(yB,c);   
-            },100);
-            if (yB <= 0){
-                clearInterval(interval);
-                ball = null;
-                yB = 520;
-            }
+            ballsList.push(new Ball(x,yB - 10,10));
+            //ballsList[0].drawBallInit();
+           
+
         }
     }
 
     function generateTarget() {
 
-        for (var i = 1; i <= 2 ; i++){
-            for (var j = 1; j < 20; j++)
-            var target = new Target(60 * j, 60 * i,20).drawTargetInit();
+            for (var j = 1; j < 14; j++){
+            var target = new Target(60 * j, 60,20);
             targetsList.push(target);  
-        }
-        
+            }
+            
     }
 
-    function respawnTarget(deadTargetID){
-        var counter;
-        var respawnTimer = setInterval(function(){
-            counter++
-        },1000)
-        if(counter === 3)
-        {
-            targetsList.splice
-        }
-
-
-    }
 </script>
 </body>
 </html>
