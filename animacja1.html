@@ -68,7 +68,7 @@
         
         drawBallInit(){
             ctx.beginPath();
-            ctx.arc(this.xBall + 37.5, this.yBall - 10, this.rBall, 0, 2 * Math.PI);
+            ctx.arc(this.xBall , this.yBall , this.rBall, 0, 2 * Math.PI);
             ctx.closePath();
             ctx.fillStyle = 'red';
             ctx.fill();
@@ -78,7 +78,7 @@
         drawBall(y){
             this.yBall = y.valueOf();
             ctx.beginPath();
-            ctx.arc(this.xBall + 37.5, this.yBall, this.rBall, 0, 2 * Math.PI);
+            ctx.arc(this.xBall , this.yBall, this.rBall, 0, 2 * Math.PI);
             ctx.closePath();
             ctx.fillStyle = 'red';
             ctx.fill();
@@ -86,7 +86,7 @@
         }
 
         eraseBall(){
-            ctx.clearRect((this.xBall + 37.5) - 10,this.yBall - 11,20.5,20.5);
+            ctx.clearRect(this.xBall - this.rBall,this.yBall - this.rBall,this.rBall*2 + 0.5 ,this.rBall*2);
         }
     }
 
@@ -94,7 +94,8 @@
         xTarget;
         yTarget;
         rTarget;
-
+        respawnTime = 0;
+        isDead = false;
         constructor(x,y,r){
         
             this.xTarget = x;
@@ -127,8 +128,19 @@
             ctx.closePath();
             ctx.fillStyle = 'white';
             ctx.fill();
-
+            this.isDead = true;
+            this.respawnTime = 0;
         }
+
+        respawn(){
+            ctx.beginPath();
+            ctx.arc(this.xTarget, this.yTarget, this.rTarget + 1, 0, 2 * Math.PI);
+            ctx.closePath();
+            ctx.fillStyle = 'blue';
+            ctx.fill();
+            this.isDead = false;
+        }
+
 
     }
     
@@ -142,7 +154,7 @@
     var platform = new Platform(x,y,75,25);
     var targetsList = [];
     var ballsList = [];
-    var deadTargetsList = [];
+    
     platform.drawPlatformInit();
     window.addEventListener('keydown', movePlatform);
     window.addEventListener('keydown', fireBall);
@@ -178,16 +190,27 @@
                     var a = targetsList[i].xTarget - ballsList[z].xBall;
                     var b = targetsList[i].yTarget - ballsList[z].yBall;
                     var c = Math.sqrt(a*a + b*b);
-                    if (c <= targetsList[i].rTarget + ballsList[z].rBall){
+                    if (c <= targetsList[i].rTarget + ballsList[z].rBall && !targetsList[i].isDead){
 
                         targetsList[i].turnInvisible();
-                        targetsList.splice(i,1);
-                        ballsList[z].eraseBall;
+                        //targetsList.splice(i,1);
+                        ballsList[z].eraseBall();
                         ballsList.splice(z,1);
             
                     }
                 }
-                }   
+                }
+                
+                for (r = 0; r < targetsList.length; r++){
+                    if(targetsList[r].isDead){
+                        targetsList[r].respawnTime += 1;
+                        if(targetsList[r].respawnTime >= 30){
+                        targetsList[r].respawn();
+                    }
+                    }
+                    
+                }
+              
             },100);
 
     
@@ -197,8 +220,8 @@
         if (e.code === 'Space'){
             
             var yB = y.valueOf();
-            ballsList.push(new Ball(x,yB - 10,10));
-            //ballsList[0].drawBallInit();
+            ballsList.push(new Ball(x + 37.5,yB - 10,10));
+            
            
 
         }
