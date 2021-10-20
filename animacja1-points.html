@@ -134,7 +134,7 @@
 
         respawn(){
             ctx.beginPath();
-            ctx.arc(this.xTarget, this.yTarget, this.rTarget + 1, 0, 2 * Math.PI);
+            ctx.arc(this.xTarget, this.yTarget, this.rTarget, 0, 2 * Math.PI);
             ctx.closePath();
             ctx.fillStyle = 'blue';
             ctx.fill();
@@ -146,6 +146,7 @@
     
     var x = 380;
     var y = 540;
+    var counter = 0;
     //var yB = y.valueOf();
     var c = document.getElementById("myCanvas");
     var ctx = c.getContext("2d");
@@ -193,18 +194,24 @@
                     if (c <= targetsList[i].rTarget + ballsList[z].rBall && !targetsList[i].isDead){
 
                         targetsList[i].turnInvisible();
-                        //targetsList.splice(i,1);
+                        counter++;
                         ballsList[z].eraseBall();
                         ballsList.splice(z,1);
             
                     }
+                    
                 }
-                if(ballsList[z].yBall <= 0){
+                    if(ballsList[z].yBall <= 0){
                         ballsList[z].eraseBall();
                         ballsList.splice(z,1);
                     }
                 }
                 
+                ctx.clearRect(0,0,100,20);
+                ctx.fillStyle = 'black'
+                ctx.font = "15px Arial";
+                ctx.fillText('Wynik: '+ counter, 10, 20);
+
                 for (r = 0; r < targetsList.length; r++){
                     if(targetsList[r].isDead){
                         targetsList[r].respawnTime += 1;
