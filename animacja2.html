@@ -115,28 +115,20 @@
 
     }
 
-
-
-
-
-    
-    var x = 380;
-    var y = 540;
-    //var yB = y.valueOf();
     var c = document.getElementById("myCanvas");
     var ctx = c.getContext("2d");
-
-    
-   
-    
-
+    var x = c.width/2 - 100 ;
+    var y = 0;
+    var width = 200;
+    var height = c.height;
+    var road = new Road(x,y,width,height);
+    road.drawRoadInit();
     window.addEventListener('keydown', movePlatform);
     window.addEventListener('keydown', fireBall);
-    generateTarget();
     
     
 
-    
+
 
 
 </script>
