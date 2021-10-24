@@ -9,19 +9,22 @@
 
     class Car {
 
-        xPlatform;
-        yPlatform;
-        widthPlatform;
-        heightPlatform;
+        xCar;
+        yCar;
+        widthCar;
+        heightCar;
+        xWheel;
+        yWheel;
+        wheelsList = [];
 
         constructor(x,y,w,h){
-            this.xPlatform = x;
-            this.yPlatform = y;
-            this.widthPlatform = w;
-            this.heightPlatform = h;
+            this.xCar = x;
+            this.yCar = y;
+            this.widthCar = w;
+            this.heightCar = h;
         }
 
-        drawPlatformInit(){
+        drawCarInit(){
             ctx.beginPath();
             ctx.rect(this.xPlatform,this.yPlatform,this.widthPlatform,this.heightPlatform);
             ctx.fillStyle = '#00ff00';
@@ -29,7 +32,7 @@
             ctx.closePath();
         }
 
-        drawPlatform(x,c){ 
+        drawCar(x,c){
             this.xPlatform = x.valueOf();
             ctx.beginPath();
             if(this.xPlatform < 0){
@@ -45,7 +48,7 @@
             return this.xPlatform;
         }
 
-        erasePlatform(){
+        eraseCar(){
         
         ctx.clearRect(this.xPlatform,this.yPlatform,this.widthPlatform,this.heightPlatform);  
 
@@ -53,127 +56,87 @@
 
     }
 
-    class Ball {
+    class Road{
+        xRoad;
+        yRoad;
+        widthRoad;
+        heightRoad;
 
-        xBall;
-        yBall;
-        rBall;
+        xKerbLeft;
+        yKerbLeft;
+        widthKerbLeft;
+        heightKerbLeft;
 
-        constructor(x,y,r){
-            this.xBall = x;
-            this.yBall = y;
-            this.rBall = r;
-            this.drawBallInit();
+        xKerbRight;
+        yKerbRight;
+        widthKerbRight;
+        heightKerbRight;
+
+        constructor(x,y,w,h) {
+            this.xRoad = x;
+            this.yRoad = y;
+            this.widthRoad = w;
+            this.heightRoad = h;
+
+            this.xKerbLeft = this.xRoad - 40;
+            this.yKerbLeft = this.yRoad;
+            this.widthKerbLeft = 40;
+            this.heightKerbLeft = this.heightRoad;
+
+            this.xKerbRight = this.widthRoad;
+            this.yKerbRight = this.yRoad;
+            this.widthKerbRight = 40;
+            this.heightKerbRight = this.heightRoad;
+
+
         }
-        
-        drawBallInit(){
+
+        drawRoadInit(){
             ctx.beginPath();
-            ctx.arc(this.xBall , this.yBall , this.rBall, 0, 2 * Math.PI);
-            ctx.closePath();
+            ctx.rect(this.xKerbLeft,this.yKerbLeft,this.widthKerbLeft,this.heightKerbLeft);
             ctx.fillStyle = 'red';
             ctx.fill();
-
-        }
-
-        drawBall(y){
-            this.yBall = y.valueOf();
-            ctx.beginPath();
-            ctx.arc(this.xBall , this.yBall, this.rBall, 0, 2 * Math.PI);
             ctx.closePath();
+            ctx.beginPath();
+            ctx.rect(this.xRoad,this.yRoad,this.widthRoad,this.heightRoad);
+            ctx.fillStyle = 'gray';
+            ctx.fill();
+            ctx.closePath();
+            ctx.beginPath();
+            ctx.rect(this.xKerbRight,this.yKerbRight,this.widthKerbRight,this.heightKerbRight);
             ctx.fillStyle = 'red';
             ctx.fill();
-            //return this.yBall;
+            ctx.closePath();
+
+        }
+        drawRoad(){
+
         }
 
-        eraseBall(){
-            ctx.clearRect(this.xBall - this.rBall,this.yBall - this.rBall,this.rBall*2 + 0.5 ,this.rBall*2);
-        }
     }
 
-    class Target {
-        xTarget;
-        yTarget;
-        rTarget;
-        respawnTime = 0;
-        isDead = false;
-        constructor(x,y,r){
-        
-            this.xTarget = x;
-            this.yTarget = y;
-            this.rTarget = r;
-            this.drawTargetInit();
-        }
-
-        drawTargetInit(){
-            ctx.beginPath();
-            ctx.arc(this.xTarget, this.yTarget, this.rTarget, 0, 2 * Math.PI);
-            ctx.closePath();
-            ctx.fillStyle = 'blue';
-            ctx.fill();
-        }
-        drawTarget(x,y){
-            this.xTarget = x.valueOf();
-            this.yTarget = x.valueOf();
-            ctx.beginPath();
-            ctx.arc(this.xTarget, this.yTarget, this.rTarget, 0, 2 * Math.PI);
-            ctx.closePath();
-            ctx.fillStyle = 'blue';
-            ctx.fill();
-
-        }
-
-        turnInvisible(){
-            ctx.beginPath();
-            ctx.arc(this.xTarget, this.yTarget, this.rTarget + 1, 0, 2 * Math.PI);
-            ctx.closePath();
-            ctx.fillStyle = 'white';
-            ctx.fill();
-            this.isDead = true;
-            this.respawnTime = 0;
-        }
-
-        respawn(){
-            ctx.beginPath();
-            ctx.arc(this.xTarget, this.yTarget, this.rTarget + 1, 0, 2 * Math.PI);
-            ctx.closePath();
-            ctx.fillStyle = 'blue';
-            ctx.fill();
-            this.isDead = false;
-        }
 
 
-    }
+
+
     
     var x = 380;
     var y = 540;
     //var yB = y.valueOf();
     var c = document.getElementById("myCanvas");
     var ctx = c.getContext("2d");
-    var interval;
-    var interval2;
+
     
    
     
-    platform.drawPlatformInit();
+
     window.addEventListener('keydown', movePlatform);
     window.addEventListener('keydown', fireBall);
     generateTarget();
     
     
-    function movePlatform(e) {
-        if(e.key === "ArrowLeft"){
-        platform.erasePlatform();    
-        x = x - 20;
-        x = platform.drawPlatform(x,c);
-        }
-        if(e.key === "ArrowRight")
-        {
-        platform.erasePlatform();    
-        x = x + 20;
-        x = platform.drawPlatform(x,c);
-         
-        }
-    }
+
+    
 
 
 </script>
