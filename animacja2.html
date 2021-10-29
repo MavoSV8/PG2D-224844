@@ -13,46 +13,24 @@
         yCar;
         widthCar;
         heightCar;
-        xWheel;
-        yWheel;
-        wheelsList = [];
 
         constructor(x,y,w,h){
             this.xCar = x;
             this.yCar = y;
             this.widthCar = w;
             this.heightCar = h;
+            this.drawCar();
         }
 
-        drawCarInit(){
+        drawCar(){
             ctx.beginPath();
-            ctx.rect(this.xPlatform,this.yPlatform,this.widthPlatform,this.heightPlatform);
+            ctx.rect(this.xCar,this.yCar,this.widthCar,this.heightCar);
             ctx.fillStyle = '#00ff00';
             ctx.fill();
             ctx.closePath();
         }
 
-        drawCar(x,c){
-            this.xPlatform = x.valueOf();
-            ctx.beginPath();
-            if(this.xPlatform < 0){
-                this.xPlatform = 0;
-            }
-            if (this.xPlatform + this.widthPlatform > c.width){
-                this.xPlatform = c.width - this.widthPlatform;
-            }
-            ctx.rect(this.xPlatform,this.yPlatform,this.widthPlatform,this.heightPlatform);
-            ctx.fillStyle = '#00ff00';
-            ctx.fill();
-            ctx.closePath();
-            return this.xPlatform;
-        }
 
-        eraseCar(){
-        
-        ctx.clearRect(this.xPlatform,this.yPlatform,this.widthPlatform,this.heightPlatform);  
-
-        }
 
     }
 
@@ -62,15 +40,14 @@
         widthRoad;
         heightRoad;
 
-        xKerbLeft;
-        yKerbLeft;
-        widthKerbLeft;
-        heightKerbLeft;
+        xStripe;
+        yStripe;
+        widthStripe;
+        heightStripe;
 
-        xKerbRight;
-        yKerbRight;
-        widthKerbRight;
-        heightKerbRight;
+        isRed = true;
+        kerbs = [];
+
 
         constructor(x,y,w,h) {
             this.xRoad = x;
@@ -78,53 +55,99 @@
             this.widthRoad = w;
             this.heightRoad = h;
 
-            this.xKerbLeft = this.xRoad - 40;
-            this.yKerbLeft = this.yRoad;
-            this.widthKerbLeft = 40;
-            this.heightKerbLeft = this.heightRoad;
+            this.xStripe = this.xRoad + this.widthRoad/2 - 5;
+            this.yStripe = this.heightRoad/2 - 5;
+            this.widthStripe = 10;
+            this.heightStripe = 40;
 
-            this.xKerbRight = this.widthRoad;
-            this.yKerbRight = this.yRoad;
-            this.widthKerbRight = 40;
-            this.heightKerbRight = this.heightRoad;
+            for(let i = 0; i<6 ; i++){
+                this.kerbs.push([this.xRoad - 40,0 + 100*i,40,100]);
+            }
+            this.drawRoad();
 
 
         }
 
-        drawRoadInit(){
-            ctx.beginPath();
-            ctx.rect(this.xKerbLeft,this.yKerbLeft,this.widthKerbLeft,this.heightKerbLeft);
-            ctx.fillStyle = 'red';
-            ctx.fill();
-            ctx.closePath();
+        drawRoad(){
+
+
             ctx.beginPath();
             ctx.rect(this.xRoad,this.yRoad,this.widthRoad,this.heightRoad);
             ctx.fillStyle = 'gray';
             ctx.fill();
             ctx.closePath();
+
+            for(let i = 0; i < 6; i++){
+                ctx.beginPath();
+                if (this.isRed === true){
+                    ctx.fillStyle = 'red';
+                    this.isRed = false;
+                }
+                else{
+                    ctx.fillStyle = 'white';
+                    this.isRed = true;
+                }
+                ctx.rect(this.kerbs[i][0],this.kerbs[i][1],this.kerbs[i][2],this.kerbs[i][3])
+                ctx.fill();
+
+                ctx.rect(this.kerbs[i][0] + this.widthRoad + 40,this.kerbs[i][1],this.kerbs[i][2],this.kerbs[i][3])
+                ctx.fill();
+                ctx.closePath();
+            }
+
             ctx.beginPath();
-            ctx.rect(this.xKerbRight,this.yKerbRight,this.widthKerbRight,this.heightKerbRight);
-            ctx.fillStyle = 'red';
+            ctx.rect(this.xStripe,this.yStripe,this.widthStripe,this.heightStripe);
+            ctx.fillStyle = 'white';
             ctx.fill();
             ctx.closePath();
 
         }
-        drawRoad(){
 
-        }
 
     }
 
     var c = document.getElementById("myCanvas");
     var ctx = c.getContext("2d");
-    var x = c.width/2 - 100 ;
+    var x1 = c.width/2 - 125;
+    var x2 = c.width/2 - 25;
     var y = 0;
-    var width = 200;
+    var width = 250;
     var height = c.height;
-    var road = new Road(x,y,width,height);
-    road.drawRoadInit();
-    window.addEventListener('keydown', movePlatform);
-    window.addEventListener('keydown', fireBall);
+    var roadBl = x1;
+    var roadBr = x1 + width;
+    ctx.fillStyle = "green";
+    ctx.fillRect(0, 0, c.width, c.height);
+    var road = new Road(x1,y,width,height);
+    var car = new Car(x2,c.height - 100,50, 75);
+    window.addEventListener('keydown', move);
+    setInterval(refresh,10);
+    function move(e){
+        if(e.key === "ArrowLeft"){
+
+            car.xCar = car.xCar - 5;
+            if(car.xCar < roadBl){
+                car.xCar = roadBl;
+            }
+
+        }
+        if(e.key === "ArrowRight")
+        {
+
+            car.xCar = car.xCar + 5;
+            if (car.xCar + car.widthCar > roadBr){
+                car.xCar = roadBr - car.widthCar;
+            }
+        }
+    }
+    function refresh(){
+        ctx.fillStyle = "green";
+        ctx.fillRect(0, 0, c.width, c.height);
+        road.drawRoad();
+        car.drawCar();
+    }
+
+
+
     
     
 
