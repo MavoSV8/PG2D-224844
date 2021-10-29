@@ -40,11 +40,10 @@
         widthRoad;
         heightRoad;
 
-        xStripe;
-        yStripe;
         widthStripe;
         heightStripe;
 
+        stripeMovement = 0;
         isRed = true;
         kerbs = [];
 
@@ -55,8 +54,6 @@
             this.widthRoad = w;
             this.heightRoad = h;
 
-            this.xStripe = this.xRoad + this.widthRoad/2 - 5;
-            this.yStripe = this.heightRoad/2 - 5;
             this.widthStripe = 10;
             this.heightStripe = 40;
 
@@ -94,12 +91,14 @@
                 ctx.fill();
                 ctx.closePath();
             }
+            for(let i = this.stripeMovement; i < 6; i+=2){
+                ctx.beginPath();
+                ctx.rect(this.kerbs[i][0] + this.widthRoad / 2 + 35,this.kerbs[i][1] - 10,this.widthStripe,this.heightStripe);
+                ctx.fillStyle = 'white';
+                ctx.fill();
+                ctx.closePath();
+            }
 
-            ctx.beginPath();
-            ctx.rect(this.xStripe,this.yStripe,this.widthStripe,this.heightStripe);
-            ctx.fillStyle = 'white';
-            ctx.fill();
-            ctx.closePath();
 
         }
 
@@ -111,6 +110,7 @@
     var x1 = c.width/2 - 125;
     var x2 = c.width/2 - 25;
     var y = 0;
+    var delay = 0;
     var width = 250;
     var height = c.height;
     var roadBl = x1;
@@ -124,7 +124,7 @@
     function move(e){
         if(e.key === "ArrowLeft"){
 
-            car.xCar = car.xCar - 5;
+            car.xCar = car.xCar - 10;
             if(car.xCar < roadBl){
                 car.xCar = roadBl;
             }
@@ -133,7 +133,7 @@
         if(e.key === "ArrowRight")
         {
 
-            car.xCar = car.xCar + 5;
+            car.xCar = car.xCar + 10;
             if (car.xCar + car.widthCar > roadBr){
                 car.xCar = roadBr - car.widthCar;
             }
@@ -144,6 +144,18 @@
         ctx.fillRect(0, 0, c.width, c.height);
         road.drawRoad();
         car.drawCar();
+        delay++;
+        if (delay === 25) {
+            if (road.stripeMovement === 0) {
+                road.stripeMovement = 1;
+            } else {
+                road.stripeMovement = 0;
+            }
+            road.isRed = !road.isRed;
+            delay = 0;
+        }
+
+
     }
 
 
