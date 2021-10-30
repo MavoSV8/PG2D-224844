@@ -74,6 +74,7 @@
             }
 
             this.kerbs[0][0] -=20;
+
             if(this.kerbs[0][0] < 0){
                 this.kerbs[0][0] = 0;
             }
@@ -172,8 +173,8 @@
         if(e.key === "ArrowLeft"){
 
             car.xCar = car.xCar - 10;
-            if(car.xCar < road.xRoad){
-                car.xCar = road.xRoad;
+            if(car.xCar < road.kerbs[10][0] + 30){
+                car.xCar = road.kerbs[10][0] + 30;
             }
 
         }
@@ -181,14 +182,14 @@
         {
 
             car.xCar = car.xCar + 10;
-            if (car.xCar + car.widthCar > road.xRoad + road.widthRoad){
-                car.xCar = (road.xRoad + road.widthRoad) - car.widthCar;
+            if (car.xCar + car.widthCar > road.kerbs[10][0] + 30 + road.widthRoad){
+                car.xCar = (road.kerbs[10][0] + 30 + road.widthRoad) - car.widthCar;
             }
         }
     }
     function changeWay(){
         counter++
-        road.roadChangeDir(counter);
+        road.roadChangeDir(counter,c);
         if(counter > 3){
           counter = 0;
         }
