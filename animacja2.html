@@ -46,7 +46,7 @@
         stripeMovement = 0;
         isRed = true;
         kerbs = [];
-
+        whichWay = 0;
 
         constructor(x,y,w,h) {
             this.xRoad = x;
@@ -57,24 +57,72 @@
             this.widthStripe = 10;
             this.heightStripe = 40;
 
-            for(let i = 0; i<6 ; i++){
-                this.kerbs.push([this.xRoad - 40,0 + 100*i,40,100]);
+            for(let i = 0; i<12 ; i++){
+                this.kerbs.push([this.xRoad - 30,50*i,30,50]);
             }
             this.drawRoad();
 
 
         }
 
+
+
+        roadLeft(){
+            for (let i = 11; i > 0;i--){
+                this.kerbs[i][0] = this.kerbs[i-1][0];
+
+            }
+
+            this.kerbs[0][0] -=20;
+            if(this.kerbs[0][0] < 0){
+                this.kerbs[0][0] = 0;
+            }
+        }
+        roadRight(c){
+            for (let i = 11; i > 0;i--){
+                this.kerbs[i][0] = this.kerbs[i-1][0];
+
+            }
+            this.kerbs[0][0] +=20;
+            if(this.kerbs[0][0] + this.widthRoad + 30 + this.kerbs[0][2] > c.width){
+                this.kerbs[0][0] = c.width - this.widthRoad - 30 - this.kerbs[0][2]
+            }
+        }
+        roadStraight(){
+            for (let i = 11; i > 0;i--){
+                this.kerbs[i][0] = this.kerbs[i-1][0];
+
+            }
+            //road.kerbs[0][0] +=20;
+        }
+
+        roadChangeDir(cnt,c){
+            this.whichWay = Math.random() * 101;
+
+            if(this.whichWay >= 0 && this.whichWay < 33 && cnt > 3){
+                this.roadLeft();
+
+            }
+            else if(this.whichWay >= 33 && this.whichWay < 66 && cnt > 3) {
+                this.roadRight(c);
+            }
+            else{
+                this.roadStraight();
+            }
+        }
         drawRoad(){
 
 
-            ctx.beginPath();
-            ctx.rect(this.xRoad,this.yRoad,this.widthRoad,this.heightRoad);
-            ctx.fillStyle = 'gray';
-            ctx.fill();
-            ctx.closePath();
+            for (let i = 0;i < 12;i++){
+                ctx.beginPath();
+                ctx.rect(this.kerbs[i][0] + 30,this.kerbs[i][1],this.widthRoad,this.heightRoad/6);
+                ctx.fillStyle = 'gray';
+                ctx.fill();
+                ctx.closePath();
 
-            for(let i = 0; i < 6; i++){
+            }
+
+            for(let i = 0; i < 12; i++){
                 ctx.beginPath();
                 if (this.isRed === true){
                     ctx.fillStyle = 'red';
@@ -87,13 +135,13 @@
                 ctx.rect(this.kerbs[i][0],this.kerbs[i][1],this.kerbs[i][2],this.kerbs[i][3])
                 ctx.fill();
 
-                ctx.rect(this.kerbs[i][0] + this.widthRoad + 40,this.kerbs[i][1],this.kerbs[i][2],this.kerbs[i][3])
+                ctx.rect(this.kerbs[i][0] + this.widthRoad + 30,this.kerbs[i][1],this.kerbs[i][2],this.kerbs[i][3])
                 ctx.fill();
                 ctx.closePath();
             }
-            for(let i = this.stripeMovement; i < 6; i+=2){
+            for(let i = this.stripeMovement; i < 12; i+=2){
                 ctx.beginPath();
-                ctx.rect(this.kerbs[i][0] + this.widthRoad / 2 + 35,this.kerbs[i][1] - 10,this.widthStripe,this.heightStripe);
+                ctx.rect(this.kerbs[i][0] + this.widthRoad / 2 + 25,this.kerbs[i][1] - 10,this.widthStripe,this.heightStripe);
                 ctx.fillStyle = 'white';
                 ctx.fill();
                 ctx.closePath();
@@ -104,7 +152,7 @@
 
 
     }
-
+    var counter = 0;
     var c = document.getElementById("myCanvas");
     var ctx = c.getContext("2d");
     var x1 = c.width/2 - 125;
@@ -113,20 +161,19 @@
     var delay = 0;
     var width = 250;
     var height = c.height;
-    var roadBl = x1;
-    var roadBr = x1 + width;
     ctx.fillStyle = "green";
     ctx.fillRect(0, 0, c.width, c.height);
     var road = new Road(x1,y,width,height);
     var car = new Car(x2,c.height - 100,50, 75);
     window.addEventListener('keydown', move);
     setInterval(refresh,10);
+    setInterval(changeWay,500);
     function move(e){
         if(e.key === "ArrowLeft"){
 
             car.xCar = car.xCar - 10;
-            if(car.xCar < roadBl){
-                car.xCar = roadBl;
+            if(car.xCar < road.xRoad){
+                car.xCar = road.xRoad;
             }
 
         }
@@ -134,10 +181,18 @@
         {
 
             car.xCar = car.xCar + 10;
-            if (car.xCar + car.widthCar > roadBr){
-                car.xCar = roadBr - car.widthCar;
+            if (car.xCar + car.widthCar > road.xRoad + road.widthRoad){
+                car.xCar = (road.xRoad + road.widthRoad) - car.widthCar;
             }
         }
+    }
+    function changeWay(){
+        counter++
+        road.roadChangeDir(counter);
+        if(counter > 3){
+          counter = 0;
+        }
+
     }
     function refresh(){
         ctx.fillStyle = "green";
