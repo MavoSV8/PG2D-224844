@@ -51,7 +51,7 @@
         obstacle = [];
 
         rng = 600;
-        randomObstacle
+
 
         constructor(x,y,w,h) {
             this.xRoad = x;
@@ -67,8 +67,8 @@
             }
 
             this.obstacle.push([this.kerbs[0][0] + 60,this.kerbs[0][1] - 20,50,20]);
-            this.obstacle.push([this.kerbs[0][0] + 200,this.kerbs[0][1] - 60,50,20]);
-            this.obstacle.push([this.kerbs[0][0] + 100,this.kerbs[0][1] - 80,50,20]);
+            this.obstacle.push([this.kerbs[0][0] + 200,this.kerbs[0][1] - 120,50,20]);
+            this.obstacle.push([this.kerbs[0][0] + 100,this.kerbs[0][1] - 220,50,20]);
             this.drawRoad();
         }
         moveObstacles() {
@@ -200,13 +200,16 @@
     var delay = 0;
     var width = 250;
     var height = c.height;
+    var refreshInterval;
+    var changeWayInterval;
     ctx.fillStyle = "green";
     ctx.fillRect(0, 0, c.width, c.height);
     var road = new Road(x1,y,width,height);
     var car = new Car(x2,c.height - 100,50, 75);
     window.addEventListener('keydown', move);
-    setInterval(refresh,10);
-    setInterval(changeWay,500);
+    refreshInterval = setInterval(refresh,10);
+    changeWayInterval = setInterval(changeWay,500);
+    setInterval(obstacleColision,10);
     function move(e){
         if(e.key === "ArrowLeft"){
 
@@ -241,6 +244,17 @@
             car.xCar = road.kerbs[10][0] + 30;
         }
     }
+    function obstacleColision(){
+        for (let i=0;i<road.obstacle.length; i++){
+            if(road.obstacle[i][0] < car.xCar + car.widthCar
+                && road.obstacle[i][0] + road.obstacle[i][2] > car.xCar
+                && road.obstacle[i][1] < car.yCar + car.heightCar
+                && road.obstacle[i][3] + road.obstacle[i][1] > car.yCar){
+                clearInterval(refreshInterval);
+                clearInterval(changeWayInterval);
+            }
+        }
+    }
     function refresh(){
         ctx.fillStyle = "green";
         ctx.fillRect(0, 0, c.width, c.height);
@@ -256,6 +270,7 @@
             road.isRed = !road.isRed;
             delay = 0;
         }
+
         correctPosition();
 
     }
