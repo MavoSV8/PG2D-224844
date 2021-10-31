@@ -68,7 +68,7 @@
 
             this.obstacle.push([this.kerbs[0][0] + 60,this.kerbs[0][1] - 20,50,20]);
             this.obstacle.push([this.kerbs[0][0] + 200,this.kerbs[0][1] - 120,50,20]);
-            this.obstacle.push([this.kerbs[0][0] + 100,this.kerbs[0][1] - 220,50,20]);
+            this.obstacle.push([this.kerbs[0][0] + 80,this.kerbs[0][1] - 220,50,20]);
             this.drawRoad();
         }
         moveObstacles() {
@@ -86,12 +86,12 @@
             if (this.obstacle[1][1] > this.rng)
             {
                 this.obstacle[1][0] = this.kerbs[0][0] + 200;
-                this.obstacle[1][1] =  this.kerbs[0][1] - 60;
+                this.obstacle[1][1] =  this.kerbs[0][1] - 120;
             }
             if (this.obstacle[2][1] > this.rng)
             {
-                this.obstacle[2][0] = this.kerbs[0][0] + 100;
-                this.obstacle[2][1] =  this.kerbs[0][1] - 80;
+                this.obstacle[2][0] = this.kerbs[0][0] + 80;
+                this.obstacle[2][1] =  this.kerbs[0][1] - 220;
             }
         }
 
@@ -252,6 +252,10 @@
                 && road.obstacle[i][3] + road.obstacle[i][1] > car.yCar){
                 clearInterval(refreshInterval);
                 clearInterval(changeWayInterval);
+                ctx.clearRect(0,0,c.width,c.height);
+                ctx.font = "60px Arial";
+                ctx.fillText("GAME OVER", c.width/2 - 125, c.height/2);
+
             }
         }
     }
