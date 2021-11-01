@@ -252,7 +252,7 @@
     changeWayInterval = setInterval(changeWay,1000);
     refreshInterval = setInterval(refresh,5);
     // pointsCountInterval = setInterval(pointsColision,10);
-    // setInterval(obstacleColision,10);
+    setInterval(collisions,10);
 
     function move(e){
         if(e.key === "ArrowLeft"){
@@ -272,18 +272,22 @@
             }
         }
     }
+    function collisions(){
+        pointsColision();
+        obstacleColision();
+    }
+
     function changeWay(){
         counter++
         road.roadChangeDir(counter,c);
         if(counter > 3){
           counter = 0;
         }
-
-        //obstacleColision();
-        road.moveObstacles();
-        //obstacleColision();
-        //pointsColision();
+        pointsColision();
         road.movePoints();
+        obstacleColision();
+        road.moveObstacles();
+
     }
     function correctPosition(){
         if (car.xCar + car.widthCar > road.kerbs[10][0] + 30 + road.widthRoad){
@@ -326,8 +330,7 @@
     }
     function refresh(){
 
-        obstacleColision();
-        pointsColision();
+
         correctPosition();
         ctx.fillStyle = "green";
         ctx.fillRect(0, 0, c.width, c.height);
