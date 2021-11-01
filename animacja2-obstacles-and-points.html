@@ -249,15 +249,15 @@
     var road = new Road(x1,y,width,height);
     var car = new Car(x2,c.height - 100,50, 75);
     window.addEventListener('keydown', move);
-    changeWayInterval = setInterval(changeWay,1000);
-    refreshInterval = setInterval(refresh,5);
+    changeWayInterval = setInterval(changeWay,250);
+    refreshInterval = setInterval(refresh,10);
     // pointsCountInterval = setInterval(pointsColision,10);
     setInterval(collisions,10);
 
     function move(e){
         if(e.key === "ArrowLeft"){
 
-            car.xCar = car.xCar - 10;
+            car.xCar = car.xCar - 20;
             if(car.xCar < road.kerbs[10][0] + 30){
                 car.xCar = road.kerbs[10][0] + 30;
             }
@@ -266,7 +266,7 @@
         if(e.key === "ArrowRight")
         {
 
-            car.xCar = car.xCar + 10;
+            car.xCar = car.xCar + 20;
             if (car.xCar + car.widthCar > road.kerbs[10][0] + 30 + road.widthRoad){
                 car.xCar = (road.kerbs[10][0] + 30 + road.widthRoad) - car.widthCar;
             }
@@ -319,11 +319,13 @@
                 && road.obstacle[i][3] + road.obstacle[i][1] > car.yCar){
                 clearInterval(refreshInterval);
                 clearInterval(changeWayInterval);
-                ctx.clearRect(0,0,c.width,c.height);
+                ctx.fillStyle = 'white';
+                ctx.fillRect(0,c.height/2 - 65,c.width,150);
+                ctx.fillStyle = 'red';
                 ctx.font = "60px Arial";
-                ctx.fillText("GAME OVER", c.width/2 - 125, c.height/2);
-                ctx.fillText("Your Score:" + score, c.width/2 - 125, c.height/2 + 65);
-                score = 0;
+                ctx.fillText("GAME OVER", c.width/2 - 150, c.height/2);
+                ctx.fillText("Your Score: " + score, c.width/2 - 150, c.height/2 + 65);
+
 
             }
         }
