@@ -51,7 +51,7 @@
         obstacle = [];
 
         rng = 600;
-
+        yRng;
 
         constructor(x,y,w,h) {
             this.xRoad = x;
@@ -66,9 +66,12 @@
                 this.kerbs.push([this.xRoad - 30,50*i,30,50]);
             }
 
-            this.obstacle.push([this.kerbs[0][0] + 60,this.kerbs[0][1] - 20,50,20]);
-            this.obstacle.push([this.kerbs[0][0] + 200,this.kerbs[0][1] - 120,50,20]);
-            this.obstacle.push([this.kerbs[0][0] + 80,this.kerbs[0][1] - 220,50,20]);
+            this.yRng = Math.floor(Math.random() * (220 - 20 + 1) ) + 220;
+            this.obstacle.push([this.kerbs[0][0] + 60,this.kerbs[0][1] - this.yRng,50,20]);
+            this.yRng = Math.floor(Math.random() * (220 - 20 + 1) ) + 220;
+            this.obstacle.push([this.kerbs[0][0] + 200,this.kerbs[0][1] - this.yRng,50,20]);
+            this.yRng = Math.floor(Math.random() * (220 - 20 + 1) ) + 220;
+            this.obstacle.push([this.kerbs[0][0] + 80,this.kerbs[0][1] - this.yRng,50,20]);
             this.drawRoad();
         }
         moveObstacles() {

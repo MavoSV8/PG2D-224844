@@ -50,10 +50,14 @@
 
         obstacle = [];
 
-        rng = 600;
+        point = [];
 
-
+        rngObstacles = 600;
+        rngPoints;
+        yRng;
+        xRng;
         constructor(x,y,w,h) {
+
             this.xRoad = x;
             this.yRoad = y;
             this.widthRoad = w;
@@ -65,34 +69,62 @@
             for(let i = 0; i<12 ; i++){
                 this.kerbs.push([this.xRoad - 30,50*i,30,50]);
             }
+            for(let i = 0; i < 3;i++){
+                this.xRng = Math.floor(Math.random() * (200 - 40 + 1) ) + 40;
+                this.yRng = Math.floor(Math.random() * (600 - 20 + 1) ) + 20;
 
-            this.obstacle.push([this.kerbs[0][0] + 60,this.kerbs[0][1] - 20,50,20]);
-            this.obstacle.push([this.kerbs[0][0] + 200,this.kerbs[0][1] - 120,50,20]);
-            this.obstacle.push([this.kerbs[0][0] + 80,this.kerbs[0][1] - 220,50,20]);
+                this.obstacle.push([this.kerbs[0][0] + this.xRng,this.kerbs[0][1] - this.yRng,50,20]);
+            }
+           for(let i = 0; i < 4;i++){
+               this.xRng = Math.floor(Math.random() * (200 - 40 + 1) ) + 40;
+               this.yRng = Math.floor(Math.random() * (600 - 20 + 1) ) + 20;
+               this.point.push([this.kerbs[0][0] + this.xRng,this.kerbs[0][1] - this.yRng,20,20,true,'blue']);
+           }
+
             this.drawRoad();
         }
         moveObstacles() {
-            this.rng = Math.floor(Math.random() * (800 - 600 + 1) ) + 600;
-            this.obstacle[0][1] = this.obstacle[0][1] + 50;
-            this.obstacle[1][1] = this.obstacle[1][1] + 50;
-            this.obstacle[2][1] = this.obstacle[2][1] + 50;
+            this.rngObstacles = Math.floor(Math.random() * (800 - 600 + 1) ) + 600;
+            this.obstacle[0][1] = this.obstacle[0][1] + 60;
+            this.obstacle[1][1] = this.obstacle[1][1] + 60;
+            this.obstacle[2][1] = this.obstacle[2][1] + 60;
 
-            if (this.obstacle[0][1] > this.rng)
+            if (this.obstacle[0][1] > this.rngObstacles)
             {
                 this.obstacle[0][0] = this.kerbs[0][0] + 60;
                 this.obstacle[0][1] =  this.kerbs[0][1] - 20;
 
             }
-            if (this.obstacle[1][1] > this.rng)
+            if (this.obstacle[1][1] > this.rngObstacles)
             {
                 this.obstacle[1][0] = this.kerbs[0][0] + 200;
                 this.obstacle[1][1] =  this.kerbs[0][1] - 120;
             }
-            if (this.obstacle[2][1] > this.rng)
+            if (this.obstacle[2][1] > this.rngObstacles)
             {
                 this.obstacle[2][0] = this.kerbs[0][0] + 80;
                 this.obstacle[2][1] =  this.kerbs[0][1] - 220;
             }
+        }
+
+        movePoints(){
+
+
+            for(let i = 0;i< this.point.length; i++){
+                this.point[i][1] = this.point[i][1] + 60;
+                this.rngPoints = this.rngObstacles = Math.floor(Math.random() * (1000 - 600 + 1) ) + 600;
+                if(this.point[i][1] > this.rngPoints){
+                    this.yRng = Math.floor(Math.random() * (600 - 40 + 1) ) + 40;
+                    this.xRng = Math.floor(Math.random() * (200 - 40 + 1) ) + 40;
+                    this.point[i][0] = this.kerbs[0][0] + this.xRng;
+                    this.point[i][1] = this.kerbs[0][1] - this.yRng;
+                    if(this.point[i][4] === false){
+                        this.point[i][4] = true;
+                        this.point[i][5] = 'blue';
+                    }
+                }
+            }
+
         }
 
         roadLeft(){
@@ -103,8 +135,8 @@
 
             this.kerbs[0][0] -=20;
 
-            if(this.kerbs[0][0] < 0){
-                this.kerbs[0][0] = 0;
+            if(this.kerbs[0][0] < 40){
+                this.kerbs[0][0] = 40;
             }
         }
         roadRight(c){
@@ -182,8 +214,16 @@
             for(let i = 0;i < this.obstacle.length;i++) {
 
                 ctx.beginPath();
-                ctx.rect(this.obstacle[i][0], this.obstacle[i][1], 50, 20);
+                ctx.rect(this.obstacle[i][0], this.obstacle[i][1], this.obstacle[i][2], this.obstacle[i][3]);
                 ctx.fillStyle = 'brown';
+                ctx.fill();
+                ctx.closePath();
+            }
+            for(let i = 0;i < this.point.length;i++) {
+
+                ctx.beginPath();
+                ctx.rect(this.point[i][0], this.point[i][1],this.point[i][2] , this.point[i][3]);
+                ctx.fillStyle = this.point[i][5];
                 ctx.fill();
                 ctx.closePath();
             }
@@ -191,6 +231,7 @@
 
 
     }
+    var score = 0
     var counter = 0;
     var c = document.getElementById("myCanvas");
     var ctx = c.getContext("2d");
@@ -202,14 +243,17 @@
     var height = c.height;
     var refreshInterval;
     var changeWayInterval;
+    var pointsCountInterval;
     ctx.fillStyle = "green";
     ctx.fillRect(0, 0, c.width, c.height);
     var road = new Road(x1,y,width,height);
     var car = new Car(x2,c.height - 100,50, 75);
     window.addEventListener('keydown', move);
-    refreshInterval = setInterval(refresh,10);
-    changeWayInterval = setInterval(changeWay,500);
-    setInterval(obstacleColision,10);
+    changeWayInterval = setInterval(changeWay,1000);
+    refreshInterval = setInterval(refresh,5);
+    // pointsCountInterval = setInterval(pointsColision,10);
+    // setInterval(obstacleColision,10);
+
     function move(e){
         if(e.key === "ArrowLeft"){
 
@@ -234,7 +278,12 @@
         if(counter > 3){
           counter = 0;
         }
+
+        //obstacleColision();
         road.moveObstacles();
+        //obstacleColision();
+        //pointsColision();
+        road.movePoints();
     }
     function correctPosition(){
         if (car.xCar + car.widthCar > road.kerbs[10][0] + 30 + road.widthRoad){
@@ -242,6 +291,20 @@
         }
         if(car.xCar < road.kerbs[10][0] + 30){
             car.xCar = road.kerbs[10][0] + 30;
+        }
+    }
+    function pointsColision(){
+        for (let i=0;i<road.point.length; i++){
+            if(road.point[i][0] < car.xCar + car.widthCar
+                && road.point[i][0] + road.point[i][2] > car.xCar
+                && road.point[i][1] < car.yCar + car.heightCar
+                && road.point[i][3] + road.point[i][1] > car.yCar){
+                if(road.point[i][4] === true) {
+                    score++;
+                    road.point[i][4] = false;
+                    road.point[i][5] = 'gray';
+                }
+            }
         }
     }
     function obstacleColision(){
@@ -255,13 +318,22 @@
                 ctx.clearRect(0,0,c.width,c.height);
                 ctx.font = "60px Arial";
                 ctx.fillText("GAME OVER", c.width/2 - 125, c.height/2);
+                ctx.fillText("Your Score:" + score, c.width/2 - 125, c.height/2 + 65);
+                score = 0;
 
             }
         }
     }
     function refresh(){
+
+        obstacleColision();
+        pointsColision();
+        correctPosition();
         ctx.fillStyle = "green";
         ctx.fillRect(0, 0, c.width, c.height);
+        ctx.fillStyle = 'white'
+        ctx.font = "20px Arial";
+        ctx.fillText("Score:" + score, 0, 30);
         road.drawRoad();
         car.drawCar();
         delay++;
@@ -275,17 +347,8 @@
             delay = 0;
         }
 
-        correctPosition();
 
     }
-
-
-
-    
-    
-
-
-
 
 </script>
 </body>
