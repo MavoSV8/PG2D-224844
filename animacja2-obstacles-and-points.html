@@ -19,6 +19,7 @@
             this.yCar = y;
             this.widthCar = w;
             this.heightCar = h;
+
             this.drawCar();
         }
 
@@ -26,6 +27,30 @@
             ctx.beginPath();
             ctx.rect(this.xCar,this.yCar,this.widthCar,this.heightCar);
             ctx.fillStyle = '#00ff00';
+            ctx.fill();
+            ctx.closePath();
+
+            ctx.beginPath();
+            ctx.rect(this.xCar,this.yCar,5,20);
+            ctx.fillStyle = 'black';
+            ctx.fill();
+            ctx.closePath();
+
+            ctx.beginPath();
+            ctx.rect(this.xCar + this.widthCar - 5,this.yCar,5,20);
+            ctx.fillStyle = 'black';
+            ctx.fill();
+            ctx.closePath();
+
+            ctx.beginPath();
+            ctx.rect(this.xCar,this.yCar + this.heightCar - 20,5,20);
+            ctx.fillStyle = 'black';
+            ctx.fill();
+            ctx.closePath();
+
+            ctx.beginPath();
+            ctx.rect(this.xCar + this.widthCar - 5,this.yCar + this.heightCar - 20,5,20);
+            ctx.fillStyle = 'black';
             ctx.fill();
             ctx.closePath();
         }
