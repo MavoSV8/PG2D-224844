@@ -110,9 +110,9 @@
         }
         moveObstacles() {
             this.rngObstacles = Math.floor(Math.random() * (800 - 600 + 1) ) + 600;
-            this.obstacle[0][1] = this.obstacle[0][1] + 60;
-            this.obstacle[1][1] = this.obstacle[1][1] + 60;
-            this.obstacle[2][1] = this.obstacle[2][1] + 60;
+            this.obstacle[0][1] = this.obstacle[0][1] + 1;
+            this.obstacle[1][1] = this.obstacle[1][1] + 1;
+            this.obstacle[2][1] = this.obstacle[2][1] + 1;
 
             if (this.obstacle[0][1] > this.rngObstacles)
             {
@@ -136,7 +136,7 @@
 
 
             for(let i = 0;i< this.point.length; i++){
-                this.point[i][1] = this.point[i][1] + 60;
+                this.point[i][1] = this.point[i][1] + 1;
                 this.rngPoints = this.rngObstacles = Math.floor(Math.random() * (1000 - 600 + 1) ) + 600;
                 if(this.point[i][1] > this.rngPoints){
                     this.yRng = Math.floor(Math.random() * (600 - 40 + 1) ) + 40;
@@ -268,16 +268,15 @@
     var height = c.height;
     var refreshInterval;
     var changeWayInterval;
-    var pointsCountInterval;
+
     ctx.fillStyle = "green";
     ctx.fillRect(0, 0, c.width, c.height);
     var road = new Road(x1,y,width,height);
     var car = new Car(x2,c.height - 100,50, 75);
     window.addEventListener('keydown', move);
-    changeWayInterval = setInterval(changeWay,250);
+    changeWayInterval = setInterval(changeWay,750);
     refreshInterval = setInterval(refresh,10);
-    // pointsCountInterval = setInterval(pointsColision,10);
-    setInterval(collisions,10);
+
 
     function move(e){
         if(e.key === "ArrowLeft"){
@@ -297,10 +296,7 @@
             }
         }
     }
-    function collisions(){
-        pointsColision();
-        obstacleColision();
-    }
+
 
     function changeWay(){
         counter++
@@ -308,10 +304,7 @@
         if(counter > 3){
           counter = 0;
         }
-        pointsColision();
-        road.movePoints();
-        obstacleColision();
-        road.moveObstacles();
+
 
     }
     function correctPosition(){
@@ -342,22 +335,20 @@
                 && road.obstacle[i][0] + road.obstacle[i][2] > car.xCar
                 && road.obstacle[i][1] < car.yCar + car.heightCar
                 && road.obstacle[i][3] + road.obstacle[i][1] > car.yCar){
-                clearInterval(refreshInterval);
-                clearInterval(changeWayInterval);
+
                 ctx.fillStyle = 'white';
                 ctx.fillRect(0,c.height/2 - 65,c.width,150);
                 ctx.fillStyle = 'red';
                 ctx.font = "60px Arial";
                 ctx.fillText("GAME OVER", c.width/2 - 150, c.height/2);
                 ctx.fillText("Your Score: " + score, c.width/2 - 150, c.height/2 + 65);
-
+                clearInterval(refreshInterval);
+                clearInterval(changeWayInterval);
 
             }
         }
     }
     function refresh(){
-
-
         correctPosition();
         ctx.fillStyle = "green";
         ctx.fillRect(0, 0, c.width, c.height);
@@ -376,7 +367,10 @@
             road.isRed = !road.isRed;
             delay = 0;
         }
-
+        pointsColision();
+        road.movePoints();
+        obstacleColision();
+        road.moveObstacles();
 
     }
 

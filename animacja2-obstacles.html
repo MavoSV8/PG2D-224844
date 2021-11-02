@@ -100,9 +100,9 @@
         }
         moveObstacles() {
             this.rng = Math.floor(Math.random() * (800 - 600 + 1) ) + 600;
-            this.obstacle[0][1] = this.obstacle[0][1] + 50;
-            this.obstacle[1][1] = this.obstacle[1][1] + 50;
-            this.obstacle[2][1] = this.obstacle[2][1] + 50;
+            this.obstacle[0][1] = this.obstacle[0][1] + 1;
+            this.obstacle[1][1] = this.obstacle[1][1] + 1;
+            this.obstacle[2][1] = this.obstacle[2][1] + 1;
 
             if (this.obstacle[0][1] > this.rng)
             {
@@ -234,13 +234,13 @@
     var road = new Road(x1,y,width,height);
     var car = new Car(x2,c.height - 100,50, 75);
     window.addEventListener('keydown', move);
+
+    changeWayInterval = setInterval(changeWay,750);
     refreshInterval = setInterval(refresh,10);
-    changeWayInterval = setInterval(changeWay,500);
-    setInterval(obstacleColision,10);
     function move(e){
         if(e.key === "ArrowLeft"){
 
-            car.xCar = car.xCar - 10;
+            car.xCar = car.xCar - 20;
             if(car.xCar < road.kerbs[10][0] + 30){
                 car.xCar = road.kerbs[10][0] + 30;
             }
@@ -249,7 +249,7 @@
         if(e.key === "ArrowRight")
         {
 
-            car.xCar = car.xCar + 10;
+            car.xCar = car.xCar + 20;
             if (car.xCar + car.widthCar > road.kerbs[10][0] + 30 + road.widthRoad){
                 car.xCar = (road.kerbs[10][0] + 30 + road.widthRoad) - car.widthCar;
             }
@@ -261,7 +261,7 @@
         if(counter > 3){
           counter = 0;
         }
-        road.moveObstacles();
+
     }
     function correctPosition(){
         if (car.xCar + car.widthCar > road.kerbs[10][0] + 30 + road.widthRoad){
@@ -287,6 +287,9 @@
         }
     }
     function refresh(){
+
+
+        correctPosition();
         ctx.fillStyle = "green";
         ctx.fillRect(0, 0, c.width, c.height);
         road.drawRoad();
@@ -301,8 +304,8 @@
             road.isRed = !road.isRed;
             delay = 0;
         }
-
-        correctPosition();
+        obstacleColision();
+        road.moveObstacles();
 
     }
 

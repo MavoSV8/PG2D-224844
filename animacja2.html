@@ -196,7 +196,7 @@
     function move(e){
         if(e.key === "ArrowLeft"){
 
-            car.xCar = car.xCar - 10;
+            car.xCar = car.xCar - 20;
             if(car.xCar < road.kerbs[10][0] + 30){
                 car.xCar = road.kerbs[10][0] + 30;
             }
@@ -205,7 +205,7 @@
         if(e.key === "ArrowRight")
         {
 
-            car.xCar = car.xCar + 10;
+            car.xCar = car.xCar + 20;
             if (car.xCar + car.widthCar > road.kerbs[10][0] + 30 + road.widthRoad){
                 car.xCar = (road.kerbs[10][0] + 30 + road.widthRoad) - car.widthCar;
             }
